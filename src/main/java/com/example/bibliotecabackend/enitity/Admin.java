@@ -20,11 +20,11 @@ public class Admin {
     public Admin() {
     }
 
-    public Admin(Long id, String username, String password) {
-        this.id = id;
+    public Admin(String username, String password) {
         this.username = username;
         this.password = password;
     }
+
 
     public Long getId() {
         return id;

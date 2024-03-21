@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Collection;
 @Entity
-@Table(name = "users", schema = "biblioteca_project", catalog = "")
+@Table(name = "users", schema = "public", catalog = "")
 public class User implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
