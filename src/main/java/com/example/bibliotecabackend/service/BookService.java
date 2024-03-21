@@ -4,6 +4,7 @@ import com.example.bibliotecabackend.enitity.Book;
 import com.example.bibliotecabackend.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +36,9 @@ public class BookService {
             Book existingBook = existingBookOptional.get();
             existingBook.setTitle(updatedBook.getTitle());
             existingBook.setAuthor(updatedBook.getAuthor());
+            existingBook.setType(updatedBook.getType());
+            existingBook.setPublicationYear(updatedBook.getPublicationYear());
+            existingBook.setImageUrl(updatedBook.getImageUrl());
             return bookRepository.save(existingBook);
         } else {
             throw new RuntimeException("Book not found with id: " + id);
@@ -45,4 +49,3 @@ public class BookService {
         bookRepository.deleteById(id);
     }
 }
-
