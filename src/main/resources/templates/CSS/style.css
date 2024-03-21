@@ -1,0 +1,85 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    text-align: center;
+}
+
+h1 {
+    color: #007bff;
+}
+
+.options {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.option {
+    margin: 0 10px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+}
+
+.option:hover {
+    transform: translateY(-5px);
+}
+
+.user {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.author {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.book {
+    background-color: #ffc107;
+    color: #333;
+}
+
+.loan {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.review {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+.admin {
+    background-color: #17a2b8;
+    color: #fff;
+}
+.admin {
+    background-color: #17a2b8;
+    color: #fff;
+}
+
+.option h2 {
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+
+.option p {
+    font-size: 16px;
+}
+
+.subscription {
+    background-color: #6610f2;
+    color: #fff;
+}

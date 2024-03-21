@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 30px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 10px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        hr {
+            margin: 40px 0;
+            border: none;
+            border-top: 1px solid #ccc;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .action-buttons {
+            display: flex;
+        }
+
+        .action-buttons button {
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>User Management</h1>
+
+    <!-- Form to create a new user -->
+    <form id="userForm">
+        <input type="hidden" id="id" name="id" th:value="0">
+
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" name="first_name" required>
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" name="last_name" required>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <label for="phoneNumber">Phone Number:</label>
+        <input type="text" id="phoneNumber" name="phone_number" required>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <button type="button" onclick="createUser()">Create User</button>
+    </form>
+
+    <hr>
+
+
+
+
+    <h2>Login</h2>
+    <form id="loginForm">
+        <label for="loginEmail">Email:</label>
+        <input type="email" id="loginEmail" name="email" required>
+        <label for="loginPassword">Password:</label>
+        <input type="password" id="loginPassword" name="password" required>
+        <button type="button" onclick="login()">Login</button>
+    </form>
+
+    <hr>
+
+    <!-- Signup Form -->
+    <h2>Sign Up</h2>
+    <form id="signupForm">
+        <label for="signupFirstName">First Name:</label>
+        <input type="text" id="signupFirstName" name="first_name" required>
+        <label for="signupLastName">Last Name:</label>
+        <input type="text" id="signupLastName" name="last_name" required>
+        <label for="signupEmail">Email:</label>
+        <input type="email" id="signupEmail" name="email" required>
+        <label for="signupPhoneNumber">Phone Number:</label>
+        <input type="text" id="signupPhoneNumber" name="phone_number" required>
+        <label for="signupPassword">Password:</label>
+        <input type="password" id="signupPassword" name="password" required>
+        <button type="button" onclick="signup()">Sign Up</button>
+    </form>
+<br>
+
+    <!-- Display all users -->
+    <h2>All Users</h2>
+    <ul id="userList">
+        <!-- User list will be populated here -->
+    </ul>
+    <br>
+
+</div>
+
+<!-- Script to fetch and manage users -->
+<script th:inline="javascript">
+
+    function login() {
+        const formData = {
+            email: document.getElementById('loginEmail').value,
+            password: document.getElementById('loginPassword').value
+        };
+
+        fetch('/api/users/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to login');
+                }
+                // Redirect or show success message
+            })
+            .catch(error => {
+                console.error('Error logging in:', error);
+                // Show error message to the user
+            });
+    }
+
+    // Function to sign up
+    function signup() {
+        const formData = {
+            first_name: document.getElementById('signupFirstName').value,
+            last_name: document.getElementById('signupLastName').value,
+            email: document.getElementById('signupEmail').value,
+            phone_number: document.getElementById('signupPhoneNumber').value,
+            password: document.getElementById('signupPassword').value
+        };
+
+        fetch('/api/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to sign up');
+                }
+                // Redirect or show success message
+            })
+            .catch(error => {
+                console.error('Error signing up:', error);
+                // Show error message to the user
+            });
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Initial fetch of users
+    fetchUsers();
+
+    // Function to fetch all users from the server
+    function fetchUsers() {
+        fetch('/api/users')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch users');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                const userList = document.getElementById('userList');
+                userList.innerHTML = '';
+                data.forEach(user => {
+                    const li = document.createElement('li');
+                    li.textContent = `${user.first_name} ${user.last_name} (${user.email})`;
+
+                    // Add action buttons
+                    const actionButtons = document.createElement('div');
+                    actionButtons.className = 'action-buttons';
+
+                    const updateButton = document.createElement('button');
+                    updateButton.textContent = 'Update';
+                    updateButton.onclick = function () {
+                        updateUser(user.id_user);
+                    };
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.onclick = function () {
+                        deleteUser(user.id_user);
+                    };
+
+                    actionButtons.appendChild(updateButton);
+                    actionButtons.appendChild(deleteButton);
+
+                    li.appendChild(actionButtons);
+
+                    userList.appendChild(li);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching users:', error);
+            });
+    }
+
+    // Function to create a new user
+    function createUser() {
+        const formData = {
+            first_name: document.getElementById('firstName').value,
+            last_name: document.getElementById('lastName').value,
+            email: document.getElementById('email').value,
+            phone_number: document.getElementById('phoneNumber').value,
+            password: document.getElementById('password').value
+        };
+
+        fetch('/api/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to create user');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                // Refresh the user list
+                fetchUsers();
+            })
+            .catch(error => {
+                console.error('Error creating user:', error);
+            });
+    }
+
+    // Function to delete a user
+    function deleteUser(id) {
+        fetch(`/api/users/${id}`, {
+            method: 'DELETE'
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to delete user');
+                }
+                // Refresh the user list
+                fetchUsers();
+            })
+            .catch(error => {
+                console.error('Error deleting user:', error);
+            });
+    }
+
+    // Function to update a user
+    function updateUser(id) {
+        const formData = {
+            first_name: document.getElementById('firstName').value,
+            last_name: document.getElementById('lastName').value,
+            email: document.getElementById('email').value,
+            phone_number: document.getElementById('phoneNumber').value,
+            password: document.getElementById('password').value
+        };
+
+        fetch(`/api/users/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to update user');
+                }
+                // Refresh the user list
+                fetchUsers();
+            })
+            .catch(error => {
+                console.error('Error updating user:', error);
+            });
+    }
+</script>
+</body>
+</html>
