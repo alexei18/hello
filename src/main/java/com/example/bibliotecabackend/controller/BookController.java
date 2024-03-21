@@ -39,10 +39,17 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book book) {
-        Book updatedBook = bookService.updateBook(id, book);
-        return ResponseEntity.ok(updatedBook);
+    public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book updatedBook) {
+        Optional<Book> existingBook = bookService.getBookById(id);
+        if (existingBook.isPresent()) {
+            updatedBook.setIdBook(id);
+            Book modifiedBook = bookService.updateBook(id, updatedBook);
+            return ResponseEntity.ok(modifiedBook);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
@@ -50,5 +57,3 @@ public class BookController {
         return ResponseEntity.noContent().build();
     }
 }
-
-
