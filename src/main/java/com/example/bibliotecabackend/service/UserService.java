@@ -1,5 +1,6 @@
 package com.example.bibliotecabackend.service;
 
+import com.example.bibliotecabackend.DTO.UserDTO;
 import com.example.bibliotecabackend.enitity.User;
 import com.example.bibliotecabackend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,13 +45,31 @@ public class UserService implements UserDetailsService {
         return Optional.empty();
     }
 
-    public void save(User user) {
-        userRepository.save(user);
+    public User updateUser(Long userId, User newUser) {
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
+
+        existingUser.setEmail(newUser.getEmail());
+        existingUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+
+        return userRepository.save(existingUser);
+    }
+
+    public void deleteUser(Long userId) {
+        userRepository.deleteById(userId);
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByEmail(email);
         return user.orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+    }
+
+    public Optional<UserDTO> getUserById(Long id) {
+        Optional<User> userOptional = userRepository.findById(id);
+        return userOptional.map(user -> new UserDTO(user.getFirst_name(), user.getLast_name(), user.getEmail(), user.getPhone_number()));
+    }
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 }

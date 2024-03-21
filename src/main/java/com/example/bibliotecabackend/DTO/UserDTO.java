@@ -5,17 +5,15 @@ public class UserDTO {
     private String last_name;
     private String email;
     private Integer phone_number;
-    private String password;
 
     public UserDTO() {
     }
 
-    public UserDTO(String first_name, String last_name, String email, Integer phone_number, String password) {
+    public UserDTO(String first_name, String last_name, String email, Integer phone_number) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.email = email;
         this.phone_number = phone_number;
-        this.password = password;
     }
 
     public String getFirst_name() {
@@ -50,11 +48,5 @@ public class UserDTO {
         this.phone_number = phone_number;
     }
 
-    public String getPassword() {
-        return password;
-    }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

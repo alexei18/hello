@@ -3,23 +3,24 @@ package com.example.bibliotecabackend.enitity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "author", schema = "biblioteca_project", catalog = "")
+@Table(name = "author")
 public class Author {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_author")
     private Long id_author;
 
-    @Column
+    @Column(name = "first_name")
     private String first_name;
-    @Column
+
+    @Column(name = "last_name")
     private String last_name;
 
     public Author() {
     }
 
-    public Author(Long id_author, String first_name, String last_name) {
-        this.id_author = id_author;
+    public Author(String first_name, String last_name) {
         this.first_name = first_name;
         this.last_name = last_name;
     }
