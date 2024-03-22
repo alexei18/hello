@@ -113,8 +113,25 @@
 
 <!-- Script to fetch and manage authors -->
 <script>
-    // Initial fetch of authors
-    fetchAuthors();
+    document.addEventListener('DOMContentLoaded', function() {
+        const adminExists = localStorage.getItem('admin');
+
+        if (!adminExists) {
+            document.body.innerHTML = '<h1>Acces Interzis!</h1><p>Nu sunteți autorizat să accesați această pagină.</p>';
+            setTimeout(function() {
+                window.location.href = '/cpanel';
+            }, 3000);
+        } else {
+
+            fetchAuthors();
+        }
+    });
+
+    // Clear the "admin" item from localStorage when the user leaves the page
+    window.addEventListener('beforeunload', function() {
+        localStorage.removeItem('admin');
+    });
+
 
     // Function to fetch all authors from the server
     function fetchAuthors() {
@@ -130,7 +147,7 @@
                 authorList.innerHTML = '';
                 data.forEach(author => {
                     const li = document.createElement('li');
-                    li.textContent = `${author.first_name} ${author.last_name}`;
+                    li.textContent = `${author.first_name} ${author.last_name} (ID: ${author.id_author})`; // Include ID
 
                     // Add action buttons
                     const actionButtons = document.createElement('div');
@@ -155,6 +172,7 @@
 
                     authorList.appendChild(li);
                 });
+
             })
             .catch(error => {
                 console.error('Error fetching authors:', error);

@@ -55,10 +55,77 @@
         button:hover {
             background-color: #0056b3;
         }
+        header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        /* Styles for authentication buttons */
+        #authButtons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        #authButtons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #0056b3;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #authButtons button:hover {
+            background-color: #00408f;
+        }
+
+        /* Styles for book list */
+        #bookList {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-gap: 20px;
+            padding: 20px;
+        }
+
+        .book {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        .book img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .book h2 {
+            margin-top: 0;
+        }
+
+        .book p {
+            margin: 5px 0;
+        }
     </style>
 </head>
 <body>
-
+<header>
+    <h1>Libraria Grate</h1>
+    <div id="authButtons">
+        <button id="homeButton">Home</button>
+        <button id="loginButton">LogIn</button>
+        <button id="registerButton">Register</button>
+    </div>
+</header>
 <div class="container">
     <h2>Register</h2>
     <form id="registerForm">
@@ -82,6 +149,7 @@
 </div>
 
 <script>
+    toggleAuthButton();
     document.getElementById('registerForm').addEventListener('submit', function(event) {
         event.preventDefault(); // Prevent the default form submission behavior
 
@@ -118,7 +186,34 @@
                 alert('An error occurred. Please try again later.');
             });
     });
+    function toggleAuthButton() {
+        const loginButton = document.getElementById('loginButton');
+        const isLoggedIn = localStorage.getItem('user');
+        if (isLoggedIn) {
+            loginButton.textContent = 'LogOut';
+        } else {
+            loginButton.textContent = 'LogIn';
+        }
+    }
 
+    document.getElementById('homeButton').addEventListener('click', function() {
+        window.location.href = '/';
+    });
+
+    document.getElementById('loginButton').addEventListener('click', function() {
+        const isLoggedIn = localStorage.getItem('user');
+        if (isLoggedIn) {
+            localStorage.removeItem('user');
+            localStorage.removeItem('admin');
+            toggleAuthButton();
+        } else {
+            window.location.href = '/login';
+        }
+    });
+
+    document.getElementById('registerButton').addEventListener('click', function() {
+        window.location.href = '/register';
+    });
 </script>
 
 </body>

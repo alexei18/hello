@@ -1,82 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Management</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-            padding: 20px;
-        }
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    padding: 20px;
+    margin: 0; /* Remove default body margin */
+    }
 
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+    h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
+    table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    }
 
-        th, td {
-            padding: 10px;
-            border-bottom: 1px solid #ccc;
-            text-align: left;
-        }
+    th, td {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    text-align: left;
+    }
 
-        th {
-            background-color: #007bff;
-            color: #fff;
-        }
+    th {
+    background-color: #007bff;
+    color: #fff;
+    }
 
-        form {
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #fff;
-        }
+    form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    }
 
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
+    label {
+    display: block;
+    margin-bottom: 5px;
+    }
 
-        input[type="text"],
-        input[type="password"] {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            box-sizing: border-box;
-        }
+    input[type="text"],
+    input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+    }
 
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
+    button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    }
 
-        button:hover {
-            background-color: #0056b3;
-        }
+    button:hover {
+    background-color: #0056b3;
+    }
+
+    tbody {
+    display: table;
+    width: 100%;
+    }
     </style>
 </head>
 <body>
 <h2>Admin Management</h2>
 
 <!-- List all admins -->
-<table>
+<table id="adminManagement" style="display: none;">
     <thead>
     <tr>
         <th>ID</th>
@@ -86,12 +92,11 @@
     </tr>
     </thead>
     <tbody id="adminList">
-    <!-- Admins will be dynamically added here -->
     </tbody>
 </table>
 
 <!-- Form to add or update an admin -->
-<form id="adminForm">
+<form id="adminForm" style="display: none;">
     <h3>Add/Edit Admin</h3>
     <label for="username">Username:</label>
     <input type="text" id="username" name="username" required>
@@ -101,8 +106,26 @@
 </form>
 
 <script>
-    // Fetch and display all admins
-    fetchAdmins();
+    document.addEventListener('DOMContentLoaded', function() {
+        const adminExists = localStorage.getItem('admin');
+
+        if (!adminExists) {
+            document.body.innerHTML = '<h1>Acces Interzis!</h1><p>Nu sunteți autorizat să accesați această pagină.</p>';
+            setTimeout(function() {
+                window.location.href = '/cpanel';
+            }, 3000);
+        } else {
+            // Show the admin management interface
+            document.getElementById('adminManagement').style.display = 'block';
+            document.getElementById('adminForm').style.display = 'block';
+            fetchAdmins();
+        }
+    });
+
+    // Clear the "admin" item from localStorage when the user leaves the page
+    window.addEventListener('beforeunload', function() {
+        localStorage.removeItem('admin');
+    });
 
     // Function to fetch and display all admins
     function fetchAdmins() {
@@ -231,3 +254,4 @@
 
 </body>
 </html>
+
