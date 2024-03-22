@@ -118,8 +118,24 @@
 
 <!-- Script to fetch and manage books -->
 <script>
-    // Initial fetch of books
-    fetchBooks();
+    document.addEventListener('DOMContentLoaded', function() {
+        const adminExists = localStorage.getItem('admin');
+
+        if (!adminExists) {
+            document.body.innerHTML = '<h1>Acces Interzis!</h1><p>Nu sunteți autorizat să accesați această pagină.</p>';
+            setTimeout(function() {
+                window.location.href = '/cpanel';
+            }, 3000);
+        } else {
+            fetchBooks();
+        }
+    });
+
+    // Clear the "admin" item from localStorage when the user leaves the page
+    window.addEventListener('beforeunload', function() {
+        localStorage.removeItem('admin');
+    });
+
 
     // Function to fetch all books from the server
     function fetchBooks() {

@@ -50,11 +50,12 @@
   </style>
 </head>
 <body>
+
 <div class="container">
   <h1>Admin Dashboard</h1>
 
   <div id="error" class="error-message" style="display: none;">
-    Access Forbidden: No Admin Found
+    Acces Interzis: Nu sunteti un administrator!
   </div>
 
   <div id="dashboard" style="display: none;">
@@ -71,6 +72,9 @@
   if (!adminExists) {
     // Display error message if no admin found
     document.getElementById('error').style.display = 'block';
+    setTimeout(function() {
+      window.location.href = '/cpanel';
+    }, 3000);
   } else {
     // Show dashboard if admin exists
     document.getElementById('dashboard').style.display = 'block';
@@ -86,6 +90,7 @@
       window.location.href = '/management-aa';
     }
   }
+
 </script>
 </body>
 </html>

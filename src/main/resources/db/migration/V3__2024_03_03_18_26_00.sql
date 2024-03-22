@@ -8,8 +8,6 @@ create table loans(
     foreign key (id_book) references books(id_book)
 );
 
-insert into loans
-values (1,1,1,'2023-03-03','2023-03-13');
 
 create table admins(
     id_admin serial primary key,
@@ -18,7 +16,8 @@ create table admins(
 );
 
 insert into admins
-values (1,'andy1k','mysecretpassword');
+values (1,'admin','$2a$10$TtGLQVDMLHbbMDlbyim6l.kZplgUJLTwhOEb5p..ZMCRdoXNcqKT6'),
+       (2,'andrei','$2a$10$Z1H1UnlmyTvSGL9TsZE0q.lguTOplYx63gjvXNlhGdpubbRoVP.mK');
 
 create table reviews(
     id_review serial primary key,
@@ -30,8 +29,6 @@ create table reviews(
     foreign key (id_book) references books(id_book)
 );
 
-insert into reviews
-values (1,1,1,'Daca mai da odata intelliju crash sau iar apar 100 erori, bag sula in programare',5);
 
 create table subscription(
     id_subscription serial primary key,
@@ -42,5 +39,4 @@ create table subscription(
     foreign key (id_user) references users(id_user)
 );
 
-insert into subscription
-values (1,1,'2023-03-03','2023-04-03',0);
+

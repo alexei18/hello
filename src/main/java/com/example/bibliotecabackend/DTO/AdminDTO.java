@@ -1,15 +1,24 @@
 package com.example.bibliotecabackend.DTO;
 
 public class AdminDTO {
+    private Long id;
+
     private String username;
-    private String password;
 
     public AdminDTO() {
     }
 
-    public AdminDTO(String username, String password) {
+    public AdminDTO(Long id, String username) {
+        this.id = id;
         this.username = username;
-        this.password = password;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -18,13 +27,5 @@ public class AdminDTO {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }
