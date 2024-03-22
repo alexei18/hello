@@ -18,7 +18,7 @@ create table admins(
 );
 
 insert into admins
-values (1,'andy1k','mysecretpassword');
+values (1,'admin','$2a$10$5FfIHjW56M/9gLP7dnj32.CbLJsXicgWRN/Q7Eblr2tQy/Qw6HXAi');
 
 create table reviews(
     id_review serial primary key,
