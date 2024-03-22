@@ -1,0 +1,47 @@
+#header {
+    height: 72px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 98px;
+    background-color: white;
+    border-bottom: 1px solid #DEE5ED;
+}
+
+#header nav ul {
+    display: flex;
+    align-items: center;
+    gap: 48px;
+    list-style: none;
+}
+
+#header #loginBtn {
+    background-color: #486284;
+    border: 1px solid #486284;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 50px;
+    transition-duration: 0.2s;
+}
+
+#header #loginBtn a {
+    color: white;
+    transition-duration: 0.2s;
+}
+
+#header nav ul a {
+    text-decoration: none;
+    color: #486284;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+#header #loginBtn:hover {
+    background-color: white;
+    color: #486284;
+}
+
+#header #loginBtn:hover a {
+    color: #486284;
+}

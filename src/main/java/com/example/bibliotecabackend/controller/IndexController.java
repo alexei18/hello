@@ -11,7 +11,35 @@ public class IndexController {
 	public String index(Model model) {
 		return "index";
 	}
+	@GetMapping("/register")
+	public String register(Model model) {
+		return "HTML/register";
+	}
 
+	@GetMapping("/cpanel")
+	public String cpanel(Model model) {
+		return "HTML/cpanel";
+	}
+	@GetMapping("/cpanel/management-a")
+	public String managementa(Model model) {
+		return "HTML/management-author";
+	}
+	@GetMapping("/cpanel/management-b")
+	public String managementb(Model model) {
+		return "HTML/management-book";
+	}
+	@GetMapping("/cpanel/management")
+	public String management(Model model) {
+		return "HTML/management";
+	}
+	@GetMapping("/login")
+	public String login(Model model) {
+		return "HTML/login";
+	}
+	@GetMapping("/management-aa")
+	public String managementaa(Model model) {
+		return "HTML/admin";
+	}
 	@GetMapping("/debug/users")
 	public String userDebug(Model model) {
 		return "HTML/userdebug";

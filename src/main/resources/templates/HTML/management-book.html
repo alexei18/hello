@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 30px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 10px;
+        }
+
+        input[type="text"],
+        input[type="date"] {
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        hr {
+            margin: 40px 0;
+            border: none;
+            border-top: 1px solid #ccc;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .action-buttons {
+            display: flex;
+        }
+
+        .action-buttons button {
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Book Management</h1>
+
+    <!-- Form to add a new book -->
+    <form id="bookForm">
+        <label for="bookTitle">Title:</label>
+        <input type="text" id="bookTitle" required>
+        <label for="authorId">Author ID:</label>
+        <input type="text" id="authorId" required>
+        <label for="bookType">Type:</label>
+        <input type="text" id="bookType" required>
+        <label for="publicationYear">Publication Year:</label>
+        <input type="date" id="publicationYear" required>
+        <label for="imageUrl">Image URL:</label>
+        <input type="text" id="imageUrl" required>
+        <button type="button" onclick="addBook()">Add Book</button>
+    </form>
+
+    <hr>
+
+    <!-- Display all books -->
+    <h2>All Books</h2>
+    <ul id="bookList">
+        <!-- Book list will be populated here -->
+    </ul>
+</div>
+
+<!-- Script to fetch and manage books -->
+<script>
+    // Initial fetch of books
+    fetchBooks();
+
+    // Function to fetch all books from the server
+    function fetchBooks() {
+        fetch('/api/books')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch books');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const bookList = document.getElementById('bookList');
+                bookList.innerHTML = '';
+                data.forEach(book => {
+                    const li = document.createElement('li');
+                    li.textContent = `${book.title}`;
+
+                    // Add action buttons
+                    const actionButtons = document.createElement('div');
+                    actionButtons.className = 'action-buttons';
+
+                    const updateButton = document.createElement('button');
+                    updateButton.textContent = 'Update';
+                    updateButton.onclick = function () {
+                        updateBook(book.idBook);
+                    };
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.onclick = function () {
+                        deleteBook(book.idBook);
+                    };
+
+                    actionButtons.appendChild(updateButton);
+                    actionButtons.appendChild(deleteButton);
+
+                    li.appendChild(actionButtons);
+
+                    bookList.appendChild(li);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching books:', error);
+            });
+    }
+
+    // Function to add a new book
+    // Function to add a new book
+    function addBook() {
+        const bookTitle = document.getElementById('bookTitle').value;
+        const authorId = document.getElementById('authorId').value;
+        const bookType = document.getElementById('bookType').value;
+        const publicationYear = document.getElementById('publicationYear').value;
+        const imageUrl = document.getElementById('imageUrl').value;
+
+        fetch('/api/books', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                title: bookTitle,
+                author: {
+                    id_author: authorId
+                },
+                type: bookType,
+                publicationYear: publicationYear,
+                imageUrl: imageUrl
+            }),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to add book');
+                }
+                // Refresh the book list
+                fetchBooks();
+            })
+            .catch(error => {
+                console.error('Error adding book:', error);
+            });
+    }
+
+
+    // Function to delete a book
+    function deleteBook(id) {
+        fetch(`/api/books/${id}`, {
+            method: 'DELETE'
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to delete book');
+                }
+                // Refresh the book list
+                fetchBooks();
+            })
+            .catch(error => {
+                console.error('Error deleting book:', error);
+            });
+    }
+
+    // Function to update a book
+    function updateBook(id) {
+        const bookTitle = prompt('Enter new title:');
+        const authorId = prompt('Enter new author ID:');
+        const bookType = prompt('Enter new type:');
+        const publicationYear = prompt('Enter new publication year:');
+        const imageUrl = prompt('Enter new image URL:');
+
+        fetch(`/api/books/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                title: bookTitle,
+                author: {id_author: authorId}, // Assuming you provide the author's ID here
+                type: bookType,
+                publicationYear: publicationYear,
+                imageUrl: imageUrl
+            }),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to update book');
+                }
+                // Refresh the book list
+                fetchBooks();
+            })
+            .catch(error => {
+                console.error('Error updating book:', error);
+            });
+    }
+</script>
+</body>
+</html>
