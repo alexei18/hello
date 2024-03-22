@@ -39,10 +39,11 @@ public class AdminController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Admin> loginAdmin(@RequestParam String username, @RequestParam String password) {
-        Optional<Admin> admin = adminService.loginAdmin(username, password);
+    public ResponseEntity<Admin> loginAdmin(@RequestBody Admin loginRequest) {
+        Optional<Admin> admin = adminService.loginAdmin(loginRequest.getUsername(), loginRequest.getPassword());
         return admin.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Admin> updateAdmin(@PathVariable Long id, @RequestBody Admin admin) {

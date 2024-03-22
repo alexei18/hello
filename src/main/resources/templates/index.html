@@ -1,128 +1,150 @@
-	<!DOCTYPE html>
-	<html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Debugging Options</title>
-		<style>
-			body {
-				font-family: Arial, sans-serif;
-				margin: 0;
-				padding: 0;
-				background-color: #f0f0f0;
-				color: #333;
-			}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Libraria Grate | Official Website</title>
+	<link rel="stylesheet" href="./CSS/index.css">
+	<style>
+		/* Styles for header */
+		header {
+			background-color: #007bff;
+			color: #fff;
+			padding: 20px;
+			text-align: center;
+		}
 
-			.container {
-				max-width: 800px;
-				margin: 50px auto;
-				text-align: center;
-			}
+		header h1 {
+			margin: 0;
+		}
 
-			h1 {
-				color: #007bff;
-			}
+		/* Styles for authentication buttons */
+		#authButtons {
+			display: flex;
+			justify-content: space-around;
+			margin-top: 20px;
+		}
 
-			.options {
-				display: flex;
-				justify-content: center;
-				margin-top: 30px;
-			}
+		#authButtons button {
+			padding: 10px 20px;
+			border: none;
+			border-radius: 5px;
+			background-color: #0056b3;
+			color: #fff;
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+		}
 
-			.option {
-				margin: 0 10px;
-				padding: 20px;
-				border-radius: 8px;
-				background-color: #ffffff;
-				box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-				cursor: pointer;
-				transition: transform 0.3s ease-in-out;
-			}
+		#authButtons button:hover {
+			background-color: #00408f;
+		}
 
-			.option:hover {
-				transform: translateY(-5px);
-			}
+		/* Styles for book list */
+		#bookList {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+			grid-gap: 20px;
+			padding: 20px;
+		}
 
-			.user {
-				background-color: #28a745;
-				color: #fff;
-			}
+		.book {
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			padding: 20px;
+			background-color: #f9f9f9;
+		}
 
-			.author {
-				background-color: #dc3545;
-				color: #fff;
-			}
+		.book img {
+			max-width: 100%;
+			height: auto;
+			margin-bottom: 10px;
+		}
 
-			.book {
-				background-color: #ffc107;
-				color: #333;
-			}
+		.book h2 {
+			margin-top: 0;
+		}
 
-			.loan {
-				background-color: #007bff;
-				color: #fff;
-			}
-
-			.review {
-				background-color: #6c757d;
-				color: #fff;
-			}
-
-			.admin {
-				background-color: #17a2b8;
-				color: #fff;
-			}
-
-			.option h2 {
-				margin-bottom: 10px;
-				font-size: 24px;
-			}
-
-			.option p {
-				font-size: 16px;
-			}
-			.subscription {
-				background-color: #6610f2;
-				color: #fff;
-			}
-		</style>
-	</head>
-	<body>
-	<div class="container">
-		<h1>Select Entity to Debug</h1>
-		<br>
-		<br>
-		<br>
-		<div class="options">
-			<div class="option user">
-				<h2>User</h2>
-				<a href="/debug/users">CLICK HERE!</a>
-			</div>
-			<div class="option author">
-				<h2>Author</h2>
-				<a href="/debug/authors">CLICK HERE!</a>
-			</div>
-			<div class="option book">
-				<h2>Book</h2>
-				<a href="/debug/books">CLICK HERE!</a>
-			</div>
-			<div class="option loan">
-				<h2>Loan</h2>
-				<a href="/debug/loans">CLICK HERE!</a>
-			</div>
-			<div class="option review">
-				<h2>Review</h2>
-				<a href="/debug/loans">CLICK HERE!</a>
-			</div>
-			<div class="option admin">
-				<h2>Admin</h2>
-				<a href="/debug/admins">CLICK HERE!</a>
-			</div>
-			<div class="option subscription">
-				<h2>Subscription</h2>
-				<a href="/debug/subscription">CLICK HERE!</a>
-			</div>
-		</div>
+		.book p {
+			margin: 5px 0;
+		}
+	</style>
+</head>
+<body>
+<header>
+	<h1>Libraria Grate</h1>
+	<div id="authButtons">
+		<button id="homeButton">Home</button>
+		<button id="loginButton">LogIn</button>
+		<button id="registerButton">Register</button>
 	</div>
-	</body>
-	</html>
+</header>
+
+<div id="bookList"></div>
+
+<script>
+	function fetchBooks() {
+		fetch('http://localhost:8080/api/books')
+				.then(response => response.json())
+				.then(data => {
+					displayBooks(data);
+				})
+				.catch(error => console.error('Error fetching books:', error));
+	}
+
+	function displayBooks(books) {
+		const bookList = document.getElementById('bookList');
+		bookList.innerHTML = '';
+
+		books.forEach(book => {
+			const bookElement = document.createElement('div');
+			bookElement.classList.add('book');
+
+			bookElement.innerHTML = `
+            <img src="${book.imageUrl}" alt="${book.title}">
+            <h2>${book.title}</h2>
+            <p>Author: ${book.author.first_name} ${book.author.last_name}</p>
+            <p>Type: ${book.type}</p>
+            <p>Publication Year: ${book.publicationYear}</p>
+        `;
+
+			bookList.appendChild(bookElement);
+		});
+	}
+
+	function toggleAuthButton() {
+		const loginButton = document.getElementById('loginButton');
+		const isLoggedIn = localStorage.getItem('user');
+		if (isLoggedIn) {
+			loginButton.textContent = 'LogOut';
+		} else {
+			loginButton.textContent = 'LogIn';
+		}
+	}
+
+	document.getElementById('homeButton').addEventListener('click', function() {
+		window.location.href = '/';
+	});
+
+	document.getElementById('loginButton').addEventListener('click', function() {
+		const isLoggedIn = localStorage.getItem('user');
+		if (isLoggedIn) {
+			localStorage.removeItem('user');
+			localStorage.removeItem('admin');
+			toggleAuthButton();
+		} else {
+			window.location.href = '/login';
+		}
+	});
+
+	document.getElementById('registerButton').addEventListener('click', function() {
+		window.location.href = '/register';
+	});
+
+	window.addEventListener('load', function() {
+		fetchBooks();
+		toggleAuthButton();
+	});
+
+</script>
+</body>
+</html>

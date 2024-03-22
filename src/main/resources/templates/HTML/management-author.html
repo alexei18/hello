@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Author Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 30px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 10px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        hr {
+            margin: 40px 0;
+            border: none;
+            border-top: 1px solid #ccc;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .action-buttons {
+            display: flex;
+        }
+
+        .action-buttons button {
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Author Management</h1>
+
+    <!-- Form to add a new author -->
+    <form id="authorForm">
+        <label for="authorFirstName">First Name:</label>
+        <input type="text" id="authorFirstName" required>
+        <label for="authorLastName">Last Name:</label>
+        <input type="text" id="authorLastName" required>
+        <button type="button" onclick="addAuthor()">Add Author</button>
+    </form>
+
+    <hr>
+
+    <!-- Display all authors -->
+    <h2>All Authors</h2>
+    <ul id="authorList">
+        <!-- Author list will be populated here -->
+    </ul>
+</div>
+
+<!-- Script to fetch and manage authors -->
+<script>
+    // Initial fetch of authors
+    fetchAuthors();
+
+    // Function to fetch all authors from the server
+    function fetchAuthors() {
+        fetch('/api/authors')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch authors');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const authorList = document.getElementById('authorList');
+                authorList.innerHTML = '';
+                data.forEach(author => {
+                    const li = document.createElement('li');
+                    li.textContent = `${author.first_name} ${author.last_name}`;
+
+                    // Add action buttons
+                    const actionButtons = document.createElement('div');
+                    actionButtons.className = 'action-buttons';
+
+                    const updateButton = document.createElement('button');
+                    updateButton.textContent = 'Update';
+                    updateButton.onclick = function () {
+                        updateAuthor(author.id_author);
+                    };
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.onclick = function () {
+                        deleteAuthor(author.id_author);
+                    };
+
+                    actionButtons.appendChild(updateButton);
+                    actionButtons.appendChild(deleteButton);
+
+                    li.appendChild(actionButtons);
+
+                    authorList.appendChild(li);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching authors:', error);
+            });
+    }
+
+    // Function to add a new author
+    function addAuthor() {
+        const authorFirstName = document.getElementById('authorFirstName').value;
+        const authorLastName = document.getElementById('authorLastName').value;
+
+        fetch('/api/authors', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                first_name: authorFirstName,
+                last_name: authorLastName
+            }),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to add author');
+                }
+                // Refresh the author list
+                fetchAuthors();
+            })
+            .catch(error => {
+                console.error('Error adding author:', error);
+            });
+    }
+
+    // Function to delete an author
+    function deleteAuthor(id) {
+        fetch(`/api/authors/${id}`, {
+            method: 'DELETE'
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to delete author');
+                }
+                // Refresh the author list
+                fetchAuthors();
+            })
+            .catch(error => {
+                console.error('Error deleting author:', error);
+            });
+    }
+
+    // Function to update an author
+    function updateAuthor(id) {
+        const authorFirstName = prompt('Enter new first name:');
+        const authorLastName = prompt('Enter new last name:');
+
+        fetch(`/api/authors/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                first_name: authorFirstName,
+                last_name: authorLastName
+            }),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to update author');
+                }
+                // Refresh the author list
+                fetchAuthors();
+            })
+            .catch(error => {
+                console.error('Error updating author:', error);
+            });
+    }
+</script>
+</body>
+</html>
